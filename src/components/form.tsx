@@ -1,33 +1,37 @@
 import React, { useState } from "react";
-import { smallTalkPromt, smalltalkQuestion, yourselfPromt, yourselfQuestion } from './../prompts';
+import { smallTalkPromt, smalltalkQuestion, yourselfPromt, yourselfQuestion } from '../prompts';
+import { topicConnector, topicName } from "../types/openaiTypes";
 
+interface FormProps {
+  topic: topicName,
+  index: number,
+};
 
-const Form = ({ topic, index }) => {
-  const topicsOfLife = {
+const Form: React.FC<FormProps> = ({ topic, index }) => {
+  const topicsOfLife: topicConnector = {
     smallTalk: {
-      p: smallTalkPromt,
-      q: smalltalkQuestion,
+      prompt: smallTalkPromt,
+      question: smalltalkQuestion,
     },
     yourself: {
-      p: yourselfPromt,
-      q: yourselfQuestion,
+      prompt: yourselfPromt,
+      question: yourselfQuestion,
     },
   };
   const [message, setMessage] = useState('');
   const [resp, setResp] = useState('')
   const [load, setLoad] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     setLoad(true);
     e.preventDefault();
     const userAnswer = e.target.smallTalk.value;
     const AWS_URL = 'https://6r5j5xaxh8.execute-api.eu-central-1.amazonaws.com/first/oai'
     const response = await fetch(AWS_URL, {
       method: 'POST',
-      // headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        questionPrompt: topicsOfLife[topic].p,
-        question: topicsOfLife[topic].q[index],
+        questionPrompt: topicsOfLife[topic].prompt,
+        question: topicsOfLife[topic].question[index],
         userAnswer: userAnswer,
       })
     });
@@ -37,7 +41,7 @@ const Form = ({ topic, index }) => {
     setLoad(false);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setMessage(e.target.value);
   };
 
