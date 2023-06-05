@@ -1,3 +1,7 @@
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
+
 /**
  * Configure your Gatsby site with this file.
  *
@@ -15,6 +19,7 @@ module.exports = {
     siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
   },
   plugins: [
+    `gatsby-plugin-env-variables`,
     `gatsby-plugin-image`,
     {
       resolve: `gatsby-source-filesystem`,

@@ -1,0 +1,2 @@
+export const smallTalkPromt = 'The student, in the end of the answer should ask back something, to keep the small talk alive.';
+export const smalltalkQuestion = ['What is the weather like in your location?', 'Do you have any plans for the weekend?'];
