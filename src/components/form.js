@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { initials, theAnswerIs, smallTalkPromt, smalltalkQuestion, yourselfPromt, yourselfQuestion } from './../prompts';
-const { Configuration, OpenAIApi } = require("openai");
+import { smallTalkPromt, smalltalkQuestion, yourselfPromt, yourselfQuestion } from './../prompts';
 
-const Form = ({topic, index}) => {
+
+const Form = ({ topic, index }) => {
   const topicsOfLife = {
     smallTalk: {
       p: smallTalkPromt,
@@ -16,29 +16,24 @@ const Form = ({topic, index}) => {
   const [message, setMessage] = useState('');
   const [resp, setResp] = useState('')
   const [load, setLoad] = useState(false)
-  
+
   const handleSubmit = async (e) => {
     setLoad(true);
     e.preventDefault();
     const userAnswer = e.target.smallTalk.value;
-    const configuration = new Configuration({
-      
-      // apiKey: `${process.env.OPENAI_API_KEY}`,
+    const AWS_URL = 'https://6r5j5xaxh8.execute-api.eu-central-1.amazonaws.com/first/oai'
+    const response = await fetch(AWS_URL, {
+      method: 'POST',
+      // headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        questionPrompt: topicsOfLife[topic].p,
+        question: topicsOfLife[topic].q,
+        userAnswer: userAnswer,
+      })
     });
-    const openai = new OpenAIApi(configuration);
-
-    console.log('teh prom:::',  `${initials} ${topicsOfLife[topic].p}
-    QUESTION: "${topicsOfLife[topic].q[index]}" ${theAnswerIs} "${userAnswer}"`);
-
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `${initials} ${topicsOfLife[topic].p}
-      QUESTION: "${topicsOfLife[topic].q}" ${theAnswerIs} "${userAnswer}"`,
-      max_tokens: 200,
-      temperature: 1,
-    });
-   
-    setResp(response.data.choices[0].text);
+    const { data } = await response.json();
+    // console.log('data:', data);
+    setResp(data);
     setLoad(false);
   };
 
@@ -50,7 +45,7 @@ const Form = ({topic, index}) => {
     <div>
       <form onSubmit={handleSubmit}>
         <textarea
-          style={{width: '100%', height: '150px'}}
+          style={{ width: '100%', height: '150px' }}
           name="smallTalk"
           value={message}
           onChange={handleChange}
