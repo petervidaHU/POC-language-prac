@@ -27,7 +27,7 @@ const Form = ({ topic, index }) => {
       // headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         questionPrompt: topicsOfLife[topic].p,
-        question: topicsOfLife[topic].q,
+        question: topicsOfLife[topic].q[index],
         userAnswer: userAnswer,
       })
     });
